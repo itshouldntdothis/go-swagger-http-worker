@@ -82,7 +82,7 @@ func NewGrcpOptions() *GrcpServerOptions {
 	return &GrcpServerOptions{
 		Server:      grpc.NewServer(),
 		Addr:        Addr,
-		RestyClient: resty.New().SetHeader("Via", via).SetTransport(Transport),
+		RestyClient: resty.New().SetRetryCount(3).SetTransport(Transport).SetHeader("Via", via),
 		RateLimited: RateLimited,
 		RateLimiter: RateLimiter,
 		UserAgent:   UserAgent,
