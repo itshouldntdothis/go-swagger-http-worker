@@ -129,8 +129,11 @@ func (o *GrcpServerOptions) DoRequest(ctx context.Context, in *pb.Request) (*pb.
 		restyReq = restyReq.SetBody(in.GetBody())
 	}
 
+	var delay time.Duration
 	if o.RateLimited {
-		o.RateLimiter.Take()
+		start := time.Now()
+		now := o.RateLimiter.Take()
+		delay = now.Sub(start)
 	}
 
 	resp, err := restyReq.Execute(method, in.GetUrl())
@@ -139,13 +142,12 @@ func (o *GrcpServerOptions) DoRequest(ctx context.Context, in *pb.Request) (*pb.
 		return nil, err
 	}
 
-	log.Printf("%v successful for %v took %v", method, resp.Request.URL, resp.Time())
-
 	headers := make(map[string]*pb.Header)
 	for k, v := range resp.Header() {
 		headers[strings.ToLower(k)] = &pb.Header{Value: v}
 	}
 
+	log.Printf("%v successful for %v took %v delayed by %v", method, resp.Request.URL, resp.Time(), delay)
 	return &pb.Response{
 		Ok:         isOk(resp.StatusCode()),
 		Url:        resp.Request.URL,
