@@ -161,8 +161,8 @@
 		},
 		{
 			"ImportPath": "gopkg.in/resty.v0",
-			"Comment": "v0.12",
-			"Rev": "7a8134d8718193eb857994adee49d73a302e7718"
+			"Comment": "v0.13",
+			"Rev": "cf81ed0a604d373be63b4c036c6b05c06520615f"
 		}
 	]
 }
